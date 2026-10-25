@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    name: Lint & Test (Python)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: esgpilot
+          POSTGRES_PASSWORD: esgpilot
+          POSTGRES_DB: esgpilot_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install CPU-only PyTorch (CI)
+        run: pip install torch==2.4.0+cpu --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint (Ruff)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Type check (mypy)
+        run: mypy api rules ingestion --ignore-missing-imports
+
+      - name: Run rules engine tests
+        run: pytest rules/tests/ -v --tb=short
+
+      - name: Run API tests
+        env:
+          DATABASE_URL: postgresql+asyncpg://esgpilot:esgpilot@localhost:5432/esgpilot_test
+          REDIS_URL: redis://localhost:6379
+          SECRET_KEY: ci-test-secret-key-not-for-production
+          LLM_BASE_URL: http://localhost:11434  # stub; tests mock LLM calls
+        run: pytest api/ -v --tb=short --asyncio-mode=auto
+
+  sdk-lint:
+    name: Lint (TypeScript SDK)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: sdk/package-lock.json
+
+      - name: Install SDK dependencies
+        run: npm ci
+        working-directory: sdk
+
+      - name: Lint SDK
+        run: npm run lint
+        working-directory: sdk
+
+      - name: Build SDK
+        run: npm run build
+        working-directory: sdk
+
+  dependency-audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Audit Python dependencies
+        run: pip-audit -r requirements.txt --ignore-vuln PYSEC-2022-42969
+
+      - name: Audit Node dependencies
+        run: npm audit --audit-level=high
+        working-directory: sdk
+        continue-on-error: true  # advisory only; harden before v1 release
