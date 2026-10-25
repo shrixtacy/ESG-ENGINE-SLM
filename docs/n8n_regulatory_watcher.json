@@ -1,0 +1,178 @@
+{
+  "name": "ESGPilot — Regulatory Document Watcher",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "hours", "hoursInterval": 168 }]
+        }
+      },
+      "id": "trigger-weekly",
+      "name": "Weekly Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Watch list of regulatory URLs to monitor for changes\nconst WATCH_URLS = [\n  {\n    url: 'https://www.sebi.gov.in/sebiweb/other/OtherAction.do?doListingSearch=yes&category=13',\n    name: 'SEBI ESG Circulars',\n    source: 'SEBI'\n  },\n  {\n    url: 'https://www.mca.gov.in/MinistryV2/notification.html',\n    name: 'MCA Notifications',\n    source: 'MCA'\n  },\n  {\n    url: 'https://sdgs.un.org/goals',\n    name: 'UN SDG Updates',\n    source: 'UN'\n  },\n  {\n    url: 'https://ghgprotocol.org/news',\n    name: 'GHG Protocol News',\n    source: 'GHG Protocol'\n  },\n  {\n    url: 'https://mospi.gov.in/national-indicator-framework',\n    name: 'MoSPI NIF Updates',\n    source: 'MoSPI'\n  }\n];\n\nreturn WATCH_URLS.map(item => ({ json: item }));"
+      },
+      "id": "build-url-list",
+      "name": "Build URL Watch List",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.url }}",
+        "options": {
+          "timeout": 30000,
+          "response": { "response": { "responseFormat": "text" } }
+        }
+      },
+      "id": "fetch-page",
+      "name": "Fetch Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\nconst content = $json.data || $json.body || '';\nconst hash = crypto.createHash('sha256').update(content).digest('hex');\n\nreturn [{\n  json: {\n    url: $('Fetch Page').item.json.url || '',\n    name: $('Build URL Watch List').item.json.name || '',\n    source: $('Build URL Watch List').item.json.source || '',\n    currentHash: hash,\n    contentLength: content.length,\n    checkedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "compute-hash",
+      "name": "Compute Content Hash",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "=esgpilot:hash:{{ $json.url }}",
+        "options": {}
+      },
+      "id": "get-stored-hash",
+      "name": "Get Stored Hash (Redis)",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [1120, 300],
+      "credentials": { "redis": { "id": "redis-creds", "name": "Redis" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "const current = $('Compute Content Hash').item.json.currentHash;\nconst stored = $json.value || null;\nconst changed = stored !== current && stored !== null;\nconst isNew = stored === null;\n\nreturn [{\n  json: {\n    ...$('Compute Content Hash').item.json,\n    previousHash: stored,\n    changed,\n    isNew,\n    shouldAlert: changed || isNew\n  }\n}];"
+      },
+      "id": "check-change",
+      "name": "Check for Changes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [{ "value1": "={{ $json.shouldAlert }}", "value2": true }]
+        }
+      },
+      "id": "if-changed",
+      "name": "IF Changed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "=esgpilot:hash:{{ $json.url }}",
+        "value": "={{ $json.currentHash }}",
+        "keyType": "automatic",
+        "expire": true,
+        "ttl": 7776000
+      },
+      "id": "store-hash",
+      "name": "Store New Hash (Redis)",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [1780, 200],
+      "credentials": { "redis": { "id": "redis-creds", "name": "Redis" } }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.SLACK_CHANNEL_ID }}",
+        "text": "=🔔 *ESGPilot Regulatory Alert*\n\n*Source*: {{ $json.name }} ({{ $json.source }})\n*URL*: {{ $json.url }}\n*Status*: {{ $json.isNew ? '🆕 New page detected' : '📝 Content changed' }}\n*Checked*: {{ $json.checkedAt }}\n\n*Action required*: Please review this page for new regulations/amendments that may affect the BRSR knowledge base.\n\n📋 Next steps:\n1. Review the changed content\n2. Identify new circulars/amendments\n3. Run ingestion pipeline if updates needed\n4. Update field_catalogue if new fields added",
+        "otherOptions": {}
+      },
+      "id": "slack-alert",
+      "name": "Slack Alert to ESG Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1780, 400],
+      "credentials": { "slackApi": { "id": "slack-creds", "name": "Slack" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.ESGPILOT_API_URL }}/v1/admin/kb/crawl-trigger",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{ $env.ESGPILOT_ADMIN_TOKEN }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "source", "value": "={{ $json.source }}" },
+            { "name": "url", "value": "={{ $json.url }}" },
+            { "name": "triggered_by", "value": "n8n_watcher" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "trigger-crawl",
+      "name": "Trigger Ingestion Pipeline",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [2000, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log all results for observability\nconst results = $input.all();\nconsole.log('Weekly regulatory check complete:', {\n  total: results.length,\n  changed: results.filter(r => r.json.changed).length,\n  new: results.filter(r => r.json.isNew).length\n});\nreturn results;"
+      },
+      "id": "log-results",
+      "name": "Log Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 520]
+    }
+  ],
+  "connections": {
+    "Weekly Trigger": { "main": [[{ "node": "Build URL Watch List", "type": "main", "index": 0 }]] },
+    "Build URL Watch List": { "main": [[{ "node": "Fetch Page", "type": "main", "index": 0 }]] },
+    "Fetch Page": { "main": [[{ "node": "Compute Content Hash", "type": "main", "index": 0 }]] },
+    "Compute Content Hash": { "main": [[{ "node": "Get Stored Hash (Redis)", "type": "main", "index": 0 }]] },
+    "Get Stored Hash (Redis)": { "main": [[{ "node": "Check for Changes", "type": "main", "index": 0 }]] },
+    "Check for Changes": { "main": [[{ "node": "IF Changed", "type": "main", "index": 0 }]] },
+    "IF Changed": {
+      "main": [
+        [
+          { "node": "Store New Hash (Redis)", "type": "main", "index": 0 },
+          { "node": "Slack Alert to ESG Team", "type": "main", "index": 0 }
+        ],
+        [{ "node": "Log Results", "type": "main", "index": 0 }]
+      ]
+    },
+    "Store New Hash (Redis)": { "main": [[{ "node": "Trigger Ingestion Pipeline", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "description": "Monitors regulatory sources weekly for BRSR/ESG document changes. Alerts ESG team via Slack and triggers ingestion pipeline on changes."
+  },
+  "tags": ["esgpilot", "regulatory", "automation"]
+}

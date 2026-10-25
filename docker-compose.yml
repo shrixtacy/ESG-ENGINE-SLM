@@ -1,0 +1,225 @@
+version: "3.9"
+
+# ============================================================
+# ESGPilot — Docker Compose
+#
+# Profiles:
+#   default  : postgres + redis + qdrant + api + worker
+#   gpu      : adds vllm inference server (requires NVIDIA GPU)
+#   n8n      : adds n8n automation server
+#   observ   : adds Langfuse + Prometheus + Grafana
+#
+# Quick start:
+#   cp .env.example .env && docker compose up
+#
+# GPU start:
+#   docker compose --profile gpu up
+# ============================================================
+
+services:
+
+  # ── PostgreSQL ─────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: esgpilot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: esgpilot
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Schema + seed data
+      - ./api/core/init_db.sql:/docker-entrypoint-initdb.d/01_init.sql
+      # Analytics views (applied after init)
+      - ./docs/analytics_views.sql:/docker-entrypoint-initdb.d/02_views.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U esgpilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # ── Redis ──────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── Qdrant Vector DB ───────────────────────────────────
+  qdrant:
+    image: qdrant/qdrant:v1.11.3
+    ports:
+      - "6333:6333"   # REST API
+      - "6334:6334"   # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: "6334"
+      QDRANT__LOG_LEVEL: "INFO"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:6333/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── ESGPilot API ───────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://esgpilot:${POSTGRES_PASSWORD:-password}@postgres:5432/esgpilot"
+      REDIS_URL: "redis://redis:6379/0"
+      QDRANT_HOST: "qdrant"
+      QDRANT_PORT: "6333"
+      VLLM_BASE_URL: "http://vllm:8000/v1"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    volumes:
+      - ./kb:/app/kb:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Celery Worker ──────────────────────────────────────
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    command: >
+      celery -A api.workers.celery_app worker
+      --loglevel=info
+      --concurrency=2
+      --queues=ingestion,analytics,notifications
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://esgpilot:${POSTGRES_PASSWORD:-password}@postgres:5432/esgpilot"
+      REDIS_URL: "redis://redis:6379/0"
+      QDRANT_HOST: "qdrant"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./kb:/app/kb:ro
+    restart: unless-stopped
+
+  # ── Ollama (CPU inference — dev/on-prem) ───────────────
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    environment:
+      OLLAMA_ORIGINS: "*"
+    restart: unless-stopped
+    # Pull model on startup:
+    # docker exec esgpilot-ollama-1 ollama pull qwen2.5:7b-instruct
+
+  # ── vLLM GPU Inference ─────────────────────────────────
+  vllm:
+    image: vllm/vllm-openai:v0.6.3
+    profiles: [gpu]
+    ports:
+      - "8000:8000"
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    environment:
+      HUGGING_FACE_HUB_TOKEN: ${HUGGINGFACE_TOKEN:-}
+    command: >
+      --model ${MODEL_NAME:-Qwen/Qwen2.5-7B-Instruct}
+      --quantization awq
+      --max-model-len 4096
+      --gpu-memory-utilization 0.90
+      --enable-prefix-caching
+      --port 8000
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # ── n8n Automation ─────────────────────────────────────
+  n8n:
+    image: n8nio/n8n:1.65.2
+    profiles: [n8n]
+    ports:
+      - "5678:5678"
+    environment:
+      N8N_HOST: "0.0.0.0"
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: "http"
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_PASSWORD:-esgpilot}
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: "5432"
+      DB_POSTGRESDB_DATABASE: esgpilot
+      DB_POSTGRESDB_USER: esgpilot
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      ESGPILOT_API_URL: "http://api:8080"
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./docs/n8n_regulatory_watcher.json:/home/node/.n8n/workflows/regulatory_watcher.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Langfuse (LLM observability) ───────────────────────
+  langfuse:
+    image: langfuse/langfuse:2
+    profiles: [observ]
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://esgpilot:${POSTGRES_PASSWORD:-password}@postgres:5432/esgpilot"
+      NEXTAUTH_SECRET: ${LANGFUSE_SECRET:-changeme-langfuse-secret}
+      NEXTAUTH_URL: "http://localhost:3000"
+      SALT: ${LANGFUSE_SALT:-changeme-salt}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redis_data:
+  qdrant_data:
+  ollama_models:
+  hf_cache:
+  n8n_data:

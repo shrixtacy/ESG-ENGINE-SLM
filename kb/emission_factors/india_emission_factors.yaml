@@ -1,0 +1,343 @@
+# ESGPilot — India Emission Factors
+# ============================================================
+# Versioned emission factors for GHG calculations.
+# Sources:
+#   - CEA CO2 Baseline Database (grid electricity)
+#   - IPCC 2006 Guidelines + AR5 GWP (fuel combustion)
+#   - India GHG Programme (www.ghgplatform-india.org)
+#   - GHG Protocol Corporate Standard (Scope 1/2/3)
+#
+# IMPORTANT: Always state the year and source in your BRSR disclosure.
+# Use AR5 GWP values (IPCC Fifth Assessment Report) as required by BRSR.
+# ============================================================
+
+metadata:
+  version: "2024.1"
+  last_updated: "2024-03-01"
+  currency: "FY2024-25"
+  gwp_basis: "AR5"
+  primary_source: "CEA CO2 Baseline Database v18 (2023), IPCC 2006"
+
+# ──────────────────────────────────────────────────────────
+# Grid Electricity — India CEA Baseline Database
+# Unit: tCO2e per MWh (= kg CO2e per kWh × 0.001)
+# ──────────────────────────────────────────────────────────
+grid_electricity:
+  description: >
+    India average grid emission factor (CO2 equivalent) for purchased electricity.
+    Use the factor matching your reporting financial year.
+    Source: CEA CO2 Baseline Database for Indian Power Sector.
+
+  factors:
+    - year: 2019
+      factor: 0.82
+      unit: "tCO2e/MWh"
+      region: "IN"
+      source: "CEA CO2 Baseline Database v14 (2020)"
+      note: "Combined margin (OM + BM average)"
+
+    - year: 2020
+      factor: 0.79
+      unit: "tCO2e/MWh"
+      region: "IN"
+      source: "CEA CO2 Baseline Database v15 (2021)"
+
+    - year: 2021
+      factor: 0.79
+      unit: "tCO2e/MWh"
+      region: "IN"
+      source: "CEA CO2 Baseline Database v16 (2022)"
+
+    - year: 2022
+      factor: 0.78
+      unit: "tCO2e/MWh"
+      region: "IN"
+      source: "CEA CO2 Baseline Database v17 (2022)"
+
+    - year: 2023
+      factor: 0.72
+      unit: "tCO2e/MWh"
+      region: "IN"
+      source: "CEA CO2 Baseline Database v18 (2023)"
+      note: "Significant reduction due to increased renewable penetration"
+
+    - year: 2024
+      factor: 0.71
+      unit: "tCO2e/MWh"
+      region: "IN"
+      source: "CEA CO2 Baseline Database v18 (2023) — projected FY2024-25"
+      note: "Use until FY2024-25 CEA update is published"
+
+# ──────────────────────────────────────────────────────────
+# Fuel Combustion — Scope 1 Emission Factors
+# Source: IPCC 2006 Guidelines for National GHG Inventories
+# GWP: IPCC AR5 (CO2=1, CH4=28, N2O=265)
+# ──────────────────────────────────────────────────────────
+fuel_combustion:
+  description: >
+    Scope 1 emission factors for stationary and mobile combustion.
+    Apply: Activity Data (quantity) × Emission Factor = tCO2e
+    All factors in tCO2e per unit (using AR5 GWP values).
+
+  fuels:
+    - fuel: diesel
+      label: "High Speed Diesel (HSD)"
+      factor: 2.6413
+      unit: "tCO2e/kL"
+      density_kg_per_litre: 0.832
+      ncv_gj_per_kl: 35.69
+      source: "IPCC 2006 Table 2.2, India GHG Programme"
+      gwp_basis: "AR5"
+      scope: 1
+      use_cases: ["vehicles", "generators", "construction_equipment"]
+
+    - fuel: petrol
+      label: "Motor Spirit / Gasoline"
+      factor: 2.2496
+      unit: "tCO2e/kL"
+      density_kg_per_litre: 0.740
+      ncv_gj_per_kl: 32.24
+      source: "IPCC 2006 Table 2.2"
+      gwp_basis: "AR5"
+      scope: 1
+
+    - fuel: lpg
+      label: "Liquefied Petroleum Gas (LPG)"
+      factor: 2.9830
+      unit: "tCO2e/MT"
+      ncv_gj_per_mt: 47.31
+      source: "IPCC 2006"
+      gwp_basis: "AR5"
+      scope: 1
+      use_cases: ["cooking", "heating", "forklifts"]
+
+    - fuel: cng
+      label: "Compressed Natural Gas (CNG)"
+      factor: 2.0424
+      unit: "tCO2e/thousand_m3"
+      ncv_gj_per_thousand_m3: 36.37
+      source: "IPCC 2006"
+      gwp_basis: "AR5"
+      scope: 1
+      use_cases: ["vehicles", "cooking"]
+
+    - fuel: png
+      label: "Piped Natural Gas (PNG)"
+      factor: 2.0424
+      unit: "tCO2e/thousand_m3"
+      ncv_gj_per_thousand_m3: 36.37
+      source: "IPCC 2006"
+      gwp_basis: "AR5"
+      scope: 1
+      note: "Same factor as CNG — same chemical composition"
+
+    - fuel: coal_bituminous
+      label: "Bituminous Coal (Industrial)"
+      factor: 2.4475
+      unit: "tCO2e/MT"
+      ncv_gj_per_mt: 19.59
+      source: "IPCC 2006"
+      gwp_basis: "AR5"
+      scope: 1
+      use_cases: ["boilers", "power_plants", "kilns"]
+
+    - fuel: coal_lignite
+      label: "Lignite / Brown Coal"
+      factor: 1.1095
+      unit: "tCO2e/MT"
+      ncv_gj_per_mt: 11.90
+      source: "IPCC 2006"
+      gwp_basis: "AR5"
+      scope: 1
+
+    - fuel: furnace_oil
+      label: "Furnace Oil / Residual Fuel Oil"
+      factor: 2.9557
+      unit: "tCO2e/kL"
+      ncv_gj_per_kl: 40.19
+      source: "IPCC 2006"
+      gwp_basis: "AR5"
+      scope: 1
+      use_cases: ["boilers", "furnaces", "ships"]
+
+    - fuel: natural_gas_pipeline
+      label: "Natural Gas (Pipeline)"
+      factor: 2.0424
+      unit: "tCO2e/thousand_m3"
+      ncv_gj_per_thousand_m3: 36.37
+      source: "IPCC 2006"
+      gwp_basis: "AR5"
+      scope: 1
+
+    - fuel: aviation_turbine_fuel
+      label: "Aviation Turbine Fuel (ATF / Jet A-1)"
+      factor: 2.5462
+      unit: "tCO2e/kL"
+      ncv_gj_per_kl: 33.45
+      source: "IPCC 2006"
+      gwp_basis: "AR5"
+      scope: 1
+      use_cases: ["aircraft", "helicopters"]
+
+    - fuel: biomass_wood
+      label: "Biomass — Wood / Agricultural Residue"
+      factor: 0.0
+      unit: "tCO2e/MT"
+      source: "IPCC 2006 — biogenic CO2 excluded per GHG Protocol"
+      gwp_basis: "AR5"
+      scope: 1
+      note: >
+        Biogenic CO2 from biomass combustion is reported separately (not in Scope 1 total).
+        Report biomass combustion in a separate disclosure line per BRSR guidance.
+
+# ──────────────────────────────────────────────────────────
+# Refrigerants — Fugitive Emissions (Scope 1)
+# Source: IPCC AR5 GWP values
+# ──────────────────────────────────────────────────────────
+refrigerants:
+  description: >
+    Fugitive emission factors for common refrigerants.
+    GWP value = CO2-equivalent per kg of refrigerant leaked.
+    Apply: kg leaked × GWP = kgCO2e; divide by 1000 for tCO2e.
+
+  factors:
+    - refrigerant: R-22
+      label: "HCFC-22 (Chlorodifluoromethane)"
+      gwp_ar5: 1760
+      unit: "tCO2e/MT"
+      phase_out: "Phased out under Montreal Protocol — replacements preferred"
+
+    - refrigerant: R-134a
+      label: "HFC-134a (Tetrafluoroethane)"
+      gwp_ar5: 1300
+      unit: "tCO2e/MT"
+      use_cases: ["air_conditioning", "refrigeration"]
+
+    - refrigerant: R-410A
+      label: "HFC-410A (Difluoromethane/Pentafluoroethane blend)"
+      gwp_ar5: 2088
+      unit: "tCO2e/MT"
+      use_cases: ["air_conditioning"]
+
+    - refrigerant: R-32
+      label: "HFC-32 (Difluoromethane)"
+      gwp_ar5: 677
+      unit: "tCO2e/MT"
+      use_cases: ["air_conditioning"]
+      note: "Lower GWP replacement for R-410A"
+
+    - refrigerant: SF6
+      label: "Sulphur Hexafluoride (SF6)"
+      gwp_ar5: 23500
+      unit: "tCO2e/MT"
+      use_cases: ["electrical_transformers", "switchgear"]
+      note: "Very high GWP — report carefully; mandatory for power sector"
+
+    - refrigerant: R-407C
+      label: "HFC-407C"
+      gwp_ar5: 1774
+      unit: "tCO2e/MT"
+      use_cases: ["air_conditioning", "refrigeration"]
+
+# ──────────────────────────────────────────────────────────
+# Energy Conversion Factors
+# ──────────────────────────────────────────────────────────
+energy_conversions:
+  description: >
+    Conversion factors for energy units.
+    BRSR requires energy reporting in Gigajoules (GJ).
+
+  factors:
+    - from: kWh
+      to: GJ
+      factor: 0.0036
+      note: "1 kWh = 3.6 MJ = 0.0036 GJ"
+
+    - from: MWh
+      to: GJ
+      factor: 3.6
+      note: "1 MWh = 3.6 GJ"
+
+    - from: GWh
+      to: GJ
+      factor: 3600.0
+
+    - from: kL_diesel
+      to: GJ
+      factor: 35.69
+      note: "Based on net calorific value of diesel"
+
+    - from: kL_petrol
+      to: GJ
+      factor: 32.24
+
+    - from: kL_furnace_oil
+      to: GJ
+      factor: 40.19
+
+    - from: MT_coal_bituminous
+      to: GJ
+      factor: 19.59
+
+    - from: MT_lpg
+      to: GJ
+      factor: 47.31
+
+    - from: thousand_m3_cng
+      to: GJ
+      factor: 36.37
+
+    - from: MMBTU
+      to: GJ
+      factor: 1.05506
+      note: "MMBTU = Million British Thermal Units"
+
+    - from: kcal
+      to: GJ
+      factor: 0.000004184
+
+    - from: TOE
+      to: GJ
+      factor: 41.868
+      note: "TOE = Tonne of Oil Equivalent"
+
+# ──────────────────────────────────────────────────────────
+# GWP Values — IPCC Assessment Reports
+# For reference when converting non-CO2 GHGs to CO2e
+# ──────────────────────────────────────────────────────────
+gwp_values:
+  description: >
+    Global Warming Potential (100-year) values.
+    BRSR requires AR5 basis. AR6 values provided for reference.
+
+  gases:
+    - gas: CO2
+      formula: CO2
+      gwp_ar4: 1
+      gwp_ar5: 1
+      gwp_ar6: 1
+
+    - gas: Methane
+      formula: CH4
+      gwp_ar4: 25
+      gwp_ar5: 28
+      gwp_ar6: 29.8
+      note: "Fossil methane. Biogenic CH4 GWP-AR5 = 27.9"
+
+    - gas: Nitrous Oxide
+      formula: N2O
+      gwp_ar4: 298
+      gwp_ar5: 265
+      gwp_ar6: 273
+
+    - gas: HFC-134a
+      formula: CH2FCF3
+      gwp_ar4: 1430
+      gwp_ar5: 1300
+      gwp_ar6: 1526
+
+    - gas: SF6
+      formula: SF6
+      gwp_ar4: 22800
+      gwp_ar5: 23500
+      gwp_ar6: 25200

@@ -1,0 +1,1399 @@
+# ESGPilot — BRSR Field Catalogue (v1)
+# Machine-readable specification of BRSR reporting fields.
+# This is the most important artifact — drives rules engine, form mapping, retrieval filters.
+# Reviewed and maintained by ESG SME.
+
+version: "2024"
+framework: "BRSR"
+description: "SEBI Business Responsibility and Sustainability Reporting format"
+
+fields:
+  # ═══════════════════════════════════════════
+  # SECTION A: General Disclosures
+  # ═══════════════════════════════════════════
+
+  - id: brsr_a_1_cin
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-I-1
+    label: Corporate Identity Number (CIN) of the Listed Entity
+    field_type: text
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      pattern: "^[A-Z]{1}[0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$"
+    refs:
+      BRSR: "Section A, I.1"
+
+  - id: brsr_a_1_name
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-I-2
+    label: Name of the Listed Entity
+    field_type: text
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section A, I.2"
+
+  - id: brsr_a_1_fy
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-I-3
+    label: Year of incorporation
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 1800
+      max: 2030
+    refs:
+      BRSR: "Section A, I.3"
+
+  - id: brsr_a_turnover
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-II-1
+    label: Turnover (in Rs.)
+    unit: INR
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "Section A, II.1"
+
+  - id: brsr_a_employees_permanent
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-III-1a
+    label: Total number of permanent employees
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "Section A, III.1"
+
+  - id: brsr_a_employees_contract
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-III-1b
+    label: Total number of contract/temporary employees
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "Section A, III.1"
+
+  - id: brsr_a_employees_total
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-III-1c
+    label: Total employees (permanent + contract)
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    formula: "sum(brsr_a_employees_permanent, brsr_a_employees_contract)"
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "Section A, III.1"
+
+  # ═══════════════════════════════════════════
+  # SECTION B: Management & Process Disclosures
+  # ═══════════════════════════════════════════
+
+  - id: brsr_b_policy_p1
+    framework: BRSR
+    section: Section B - Management and Process
+    code: B-1-P1
+    label: "Policy on Principle 1 (Ethics, Transparency, Accountability) — Does the entity have a policy?"
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section B, Policy 1"
+      NGRBC: "Principle 1"
+
+  - id: brsr_b_policy_p2
+    framework: BRSR
+    section: Section B - Management and Process
+    code: B-1-P2
+    label: "Policy on Principle 2 (Sustainable Products/Services)"
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section B, Policy 2"
+      NGRBC: "Principle 2"
+
+  - id: brsr_b_policy_p3
+    framework: BRSR
+    section: Section B - Management and Process
+    code: B-1-P3
+    label: "Policy on Principle 3 (Employee Wellbeing)"
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section B, Policy 3"
+      NGRBC: "Principle 3"
+
+  - id: brsr_b_policy_p4
+    framework: BRSR
+    section: Section B - Management and Process
+    code: B-1-P4
+    label: "Policy on Principle 4 (Stakeholder Engagement)"
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section B, Policy 4"
+      NGRBC: "Principle 4"
+
+  - id: brsr_b_policy_p5
+    framework: BRSR
+    section: Section B - Management and Process
+    code: B-1-P5
+    label: "Policy on Principle 5 (Human Rights)"
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section B, Policy 5"
+      NGRBC: "Principle 5"
+
+  - id: brsr_b_policy_p6
+    framework: BRSR
+    section: Section B - Management and Process
+    code: B-1-P6
+    label: "Policy on Principle 6 (Environment)"
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section B, Policy 6"
+      NGRBC: "Principle 6"
+
+  - id: brsr_b_policy_p7
+    framework: BRSR
+    section: Section B - Management and Process
+    code: B-1-P7
+    label: "Policy on Principle 7 (Public Policy)"
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section B, Policy 7"
+      NGRBC: "Principle 7"
+
+  - id: brsr_b_policy_p8
+    framework: BRSR
+    section: Section B - Management and Process
+    code: B-1-P8
+    label: "Policy on Principle 8 (Inclusive Growth)"
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section B, Policy 8"
+      NGRBC: "Principle 8"
+
+  - id: brsr_b_policy_p9
+    framework: BRSR
+    section: Section B - Management and Process
+    code: B-1-P9
+    label: "Policy on Principle 9 (Consumer Responsibility)"
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "Section B, Policy 9"
+      NGRBC: "Principle 9"
+
+  # ═══════════════════════════════════════════
+  # SECTION C — Principle 6: Environment
+  # ═══════════════════════════════════════════
+
+  # --- Energy ---
+  - id: brsr_p6_ei1_elec_purchased
+    framework: BRSR
+    section: Section C - Principle 6 - Energy
+    code: P6-EI-1a
+    label: Total electricity consumption from grid (purchased)
+    unit: kWh
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "P6 Essential Indicator 1"
+      GRI: "302-1"
+      SDG: ["7.2", "7.3"]
+
+  - id: brsr_p6_ei1_elec_renewable
+    framework: BRSR
+    section: Section C - Principle 6 - Energy
+    code: P6-EI-1b
+    label: Electricity from renewable sources (solar, wind, etc.)
+    unit: kWh
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 1"
+      GRI: "302-1"
+      SDG: ["7.2"]
+
+  - id: brsr_p6_ei1_fuel_total
+    framework: BRSR
+    section: Section C - Principle 6 - Energy
+    code: P6-EI-1c
+    label: Total fuel consumption (all fuels, converted to GJ)
+    unit: GJ
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "P6 Essential Indicator 1"
+      GRI: "302-1"
+
+  - id: brsr_p6_ei1_energy_total
+    framework: BRSR
+    section: Section C - Principle 6 - Energy
+    code: P6-EI-1d
+    label: Total energy consumption (electricity + fuel, in GJ)
+    unit: GJ
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    formula: "sum(brsr_p6_ei1_fuel_total)"
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 1"
+      GRI: "302-1"
+
+  - id: brsr_p6_ei2_energy_intensity
+    framework: BRSR
+    section: Section C - Principle 6 - Energy
+    code: P6-EI-2
+    label: Energy intensity per rupee of turnover (GJ/Rs. crore)
+    unit: GJ/INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 2"
+      GRI: "302-3"
+      SDG: ["7.3"]
+
+  # --- GHG Emissions ---
+  - id: brsr_p6_ei7_scope1
+    framework: BRSR
+    section: Section C - Principle 6 - GHG Emissions
+    code: P6-EI-7a
+    label: Total Scope 1 GHG emissions (tCO2e)
+    unit: tCO2e
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+      yoy_increase_threshold: 100
+      yoy_decrease_threshold: -50
+    refs:
+      BRSR: "P6 Essential Indicator 7"
+      GRI: "305-1"
+      SDG: ["13.2"]
+      GHG_Protocol: "Corporate Standard Ch.4"
+
+  - id: brsr_p6_ei7_scope2
+    framework: BRSR
+    section: Section C - Principle 6 - GHG Emissions
+    code: P6-EI-7b
+    label: Total Scope 2 GHG emissions (tCO2e)
+    unit: tCO2e
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+      yoy_increase_threshold: 100
+      yoy_decrease_threshold: -50
+    refs:
+      BRSR: "P6 Essential Indicator 7"
+      GRI: "305-2"
+      SDG: ["13.2"]
+      GHG_Protocol: "Scope 2 Guidance"
+
+  - id: brsr_p6_ei7_scope1_2_total
+    framework: BRSR
+    section: Section C - Principle 6 - GHG Emissions
+    code: P6-EI-7c
+    label: Total Scope 1 + Scope 2 GHG emissions (tCO2e)
+    unit: tCO2e
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    formula: "sum(brsr_p6_ei7_scope1, brsr_p6_ei7_scope2)"
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 7"
+      GRI: "305-1, 305-2"
+      SDG: ["13.2"]
+
+  - id: brsr_p6_ei8_ghg_intensity
+    framework: BRSR
+    section: Section C - Principle 6 - GHG Emissions
+    code: P6-EI-8
+    label: GHG emission intensity (tCO2e per Rs. crore turnover)
+    unit: tCO2e/INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 8"
+      GRI: "305-4"
+      SDG: ["13.2"]
+
+  # --- Water ---
+  - id: brsr_p6_ei3_water_withdrawal
+    framework: BRSR
+    section: Section C - Principle 6 - Water
+    code: P6-EI-3a
+    label: Total water withdrawal (kilolitres)
+    unit: kL
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "P6 Essential Indicator 3"
+      GRI: "303-3"
+      SDG: ["6.4"]
+
+  - id: brsr_p6_ei3_water_consumption
+    framework: BRSR
+    section: Section C - Principle 6 - Water
+    code: P6-EI-3b
+    label: Total water consumption (kilolitres)
+    unit: kL
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 3"
+      GRI: "303-5"
+      SDG: ["6.4"]
+
+  - id: brsr_p6_ei3_water_discharge
+    framework: BRSR
+    section: Section C - Principle 6 - Water
+    code: P6-EI-3c
+    label: Total water discharged (kilolitres)
+    unit: kL
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 3"
+      GRI: "303-4"
+      SDG: ["6.3"]
+
+  - id: brsr_p6_ei4_water_intensity
+    framework: BRSR
+    section: Section C - Principle 6 - Water
+    code: P6-EI-4
+    label: Water intensity per rupee of turnover (kL/Rs. crore)
+    unit: kL/INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 4"
+      SDG: ["6.4"]
+
+  # --- Waste ---
+  - id: brsr_p6_ei9_waste_generated
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-9a
+    label: Total waste generated (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "P6 Essential Indicator 9"
+      GRI: "306-3"
+      SDG: ["12.4", "12.5"]
+
+  - id: brsr_p6_ei9_hazardous_waste
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-9b
+    label: Hazardous waste generated (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 9"
+      GRI: "306-3"
+
+  - id: brsr_p6_ei9_waste_recycled
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-9c
+    label: Total waste recycled/reused (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 9"
+      GRI: "306-4"
+      SDG: ["12.5"]
+
+  # ═══════════════════════════════════════════
+  # SECTION C — Principle 3: Employee Wellbeing
+  # ═══════════════════════════════════════════
+
+  - id: brsr_p3_ei1_safety_incidents
+    framework: BRSR
+    section: Section C - Principle 3 - Safety
+    code: P3-EI-1a
+    label: Number of safety incidents (LTIFR basis)
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 1"
+      GRI: "403-9"
+      SDG: ["8.8"]
+
+  - id: brsr_p3_ei1_fatalities
+    framework: BRSR
+    section: Section C - Principle 3 - Safety
+    code: P3-EI-1b
+    label: Number of fatalities
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 1"
+      GRI: "403-9"
+      SDG: ["8.8"]
+
+  - id: brsr_p3_ei4_training_hours
+    framework: BRSR
+    section: Section C - Principle 3 - Training
+    code: P3-EI-4
+    label: Average training hours per employee
+    unit: hours
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 4"
+      GRI: "404-1"
+      SDG: ["4.4", "8.5"]
+
+  # ═══════════════════════════════════════════
+  # SECTION C — Principle 8: CSR / Inclusive Growth
+  # ═══════════════════════════════════════════
+
+  - id: brsr_p8_ei1_csr_amount
+    framework: BRSR
+    section: Section C - Principle 8 - CSR
+    code: P8-EI-1
+    label: "CSR expenditure (₹ in lakhs)"
+    unit: INR_lakhs
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "P8 Essential Indicator 1"
+      Companies_Act: "Section 135"
+      SDG: ["1.1", "2.1", "3.1", "4.1"]
+
+  - id: brsr_p8_ei1_csr_mandatory
+    framework: BRSR
+    section: Section C - Principle 8 - CSR
+    code: P8-EI-1b
+    label: "Mandatory CSR obligation (2% of avg net profit)"
+    unit: INR_lakhs
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P8 Essential Indicator 1"
+      Companies_Act: "Section 135(5)"
+
+  # ═══════════════════════════════════════════
+  # SECTION A — Financial / Turnover (for intensity denominators)
+  # ═══════════════════════════════════════════
+
+  - id: brsr_seca_turnover
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-II-turnover
+    label: "Turnover / Revenue from Operations (₹ crore)"
+    unit: INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "Section A, II"
+    note: "Used as denominator for all intensity ratios (GHG, energy, water)"
+
+  - id: brsr_seca_net_worth
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-II-networth
+    label: "Net Worth (₹ crore)"
+    unit: INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "Section A, II"
+
+  - id: brsr_seca_paid_up_capital
+    framework: BRSR
+    section: Section A - General Disclosures
+    code: A-II-capital
+    label: "Paid-up Capital (₹ crore)"
+    unit: INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+    refs:
+      BRSR: "Section A, II"
+
+  # ═══════════════════════════════════════════
+  # SECTION B — CSR Financial Fields
+  # ═══════════════════════════════════════════
+
+  - id: brsr_secb_csr_obligation
+    framework: BRSR
+    section: Section B - Management and Process - CSR
+    code: B-CSR-obligation
+    label: "CSR statutory obligation (2% of avg net profit, ₹ crore)"
+    unit: INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      Companies_Act: "Section 135(5)"
+      BRSR: "Section B"
+
+  - id: brsr_secb_csr_spent
+    framework: BRSR
+    section: Section B - Management and Process - CSR
+    code: B-CSR-spent
+    label: "Total CSR amount spent during the year (₹ crore)"
+    unit: INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      Companies_Act: "Section 135"
+      BRSR: "Section B"
+
+  - id: brsr_secb_csr_unspent
+    framework: BRSR
+    section: Section B - Management and Process - CSR
+    code: B-CSR-unspent
+    label: "Total CSR amount unspent (₹ crore)"
+    unit: INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      Companies_Act: "Section 135(6)"
+
+  - id: brsr_secb_csr_carried
+    framework: BRSR
+    section: Section B - Management and Process - CSR
+    code: B-CSR-carried
+    label: "CSR amount carried forward from previous years (₹ crore)"
+    unit: INR_crore
+    field_type: number
+    mandatory_for:
+      classes: []
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      Companies_Act: "Section 135"
+
+  # ═══════════════════════════════════════════
+  # SECTION C — Principle 6 — Boundary / Cross-field codes
+  # (used in boundary_checks.py)
+  # ═══════════════════════════════════════════
+
+  - id: brsr_p6_ei6_total
+    framework: BRSR
+    section: Section C - Principle 6 - Energy
+    code: P6-EI-6
+    label: Total energy consumed (GJ) — electricity + fuel combined
+    unit: GJ
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 6"
+      GRI: "302-1"
+
+  - id: brsr_p6_ei6_renewable
+    framework: BRSR
+    section: Section C - Principle 6 - Energy
+    code: P6-EI-6a
+    label: Energy from renewable sources (GJ)
+    unit: GJ
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 6"
+      SDG: ["7.2"]
+
+  - id: brsr_p6_ei6_nonrenewable
+    framework: BRSR
+    section: Section C - Principle 6 - Energy
+    code: P6-EI-6b
+    label: Energy from non-renewable sources (GJ)
+    unit: GJ
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 6"
+
+  - id: brsr_p6_ei6_renewable_pct
+    framework: BRSR
+    section: Section C - Principle 6 - Energy
+    code: P6-EI-6c
+    label: "Renewable energy share (%)"
+    unit: "%"
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      max: 100
+    refs:
+      BRSR: "P6 Essential Indicator 6"
+      SDG: ["7.2"]
+
+  # Water fields (aligned with boundary_checks.py field codes)
+  - id: brsr_p6_ei9_withdrawal
+    framework: BRSR
+    section: Section C - Principle 6 - Water
+    code: P6-EI-9-withdrawal
+    label: Total water withdrawal (KL)
+    unit: KL
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "P6 Essential Indicator 9"
+      GRI: "303-3"
+      SDG: ["6.4"]
+
+  - id: brsr_p6_ei9_consumption
+    framework: BRSR
+    section: Section C - Principle 6 - Water
+    code: P6-EI-9-consumption
+    label: Total water consumption (KL)
+    unit: KL
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 9"
+      GRI: "303-5"
+
+  - id: brsr_p6_ei9_discharge
+    framework: BRSR
+    section: Section C - Principle 6 - Water
+    code: P6-EI-9-discharge
+    label: Total water discharge / effluent (KL)
+    unit: KL
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 9"
+      GRI: "303-4"
+      SDG: ["6.3"]
+
+  - id: brsr_p6_ei9_stress_withdrawal
+    framework: BRSR
+    section: Section C - Principle 6 - Water
+    code: P6-EI-9-stress
+    label: Water withdrawal from water-stressed areas (KL)
+    unit: KL
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 9"
+      SDG: ["6.4"]
+    note: "Identify stressed areas via WRI Aqueduct (High/Extremely High water stress)"
+
+  # Waste fields (aligned with boundary_checks.py)
+  - id: brsr_p6_ei10_total
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-10-total
+    label: Total waste generated (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "P6 Essential Indicator 10"
+      GRI: "306-3"
+      SDG: ["12.4", "12.5"]
+
+  - id: brsr_p6_ei10_hazardous
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-10-hazardous
+    label: Hazardous waste generated (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 10"
+      GRI: "306-3"
+
+  - id: brsr_p6_ei10_nonhazardous
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-10-nonhazardous
+    label: Non-hazardous waste generated (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 10"
+
+  - id: brsr_p6_ei10_recycled
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-10-recycled
+    label: Total waste recycled or reused (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 10"
+      GRI: "306-4"
+      SDG: ["12.5"]
+
+  - id: brsr_p6_ei10_landfill
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-10-landfill
+    label: Waste sent to landfill (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 10"
+      GRI: "306-5"
+
+  - id: brsr_p6_ei10_incinerated
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-10-incinerated
+    label: Waste incinerated (with/without energy recovery) (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 10"
+
+  - id: brsr_p6_ei10_other_disposal
+    framework: BRSR
+    section: Section C - Principle 6 - Waste
+    code: P6-EI-10-other
+    label: Waste disposed via other methods (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: []
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P6 Essential Indicator 10"
+
+  # ═══════════════════════════════════════════
+  # SECTION C — Principle 3 — Employee fields
+  # (aligned with boundary_checks.py)
+  # ═══════════════════════════════════════════
+
+  - id: brsr_p3_ei1_total
+    framework: BRSR
+    section: Section C - Principle 3 - Employees
+    code: P3-EI-1-total
+    label: Total number of employees and workers
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    formula: "sum(brsr_p3_ei1_permanent, brsr_p3_ei1_contractual)"
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 1"
+      GRI: "2-7"
+      SDG: ["8.5"]
+
+  - id: brsr_p3_ei1_permanent
+    framework: BRSR
+    section: Section C - Principle 3 - Employees
+    code: P3-EI-1-permanent
+    label: Number of permanent employees
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 1"
+      GRI: "2-7"
+
+  - id: brsr_p3_ei1_contractual
+    framework: BRSR
+    section: Section C - Principle 3 - Employees
+    code: P3-EI-1-contractual
+    label: Number of contractual / temporary workers
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 1"
+
+  - id: brsr_p3_ei1_male
+    framework: BRSR
+    section: Section C - Principle 3 - Employees
+    code: P3-EI-1-male
+    label: Number of male employees
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 1"
+      GRI: "2-7"
+      SDG: ["5.1", "8.5"]
+
+  - id: brsr_p3_ei1_female
+    framework: BRSR
+    section: Section C - Principle 3 - Employees
+    code: P3-EI-1-female
+    label: Number of female employees
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 1"
+      GRI: "2-7"
+      SDG: ["5.1", "8.5"]
+
+  - id: brsr_p3_ei1_other_gender
+    framework: BRSR
+    section: Section C - Principle 3 - Employees
+    code: P3-EI-1-other-gender
+    label: Number of employees with other gender identity
+    field_type: number
+    mandatory_for:
+      classes: []
+    validations:
+      min: 0
+    refs:
+      BRSR: "P3 Essential Indicator 1"
+
+  - id: brsr_p3_ei2_training_hours
+    framework: BRSR
+    section: Section C - Principle 3 - Training
+    code: P3-EI-2
+    label: Total training hours for all employees (hours)
+    unit: hours
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 2"
+      GRI: "404-1"
+      SDG: ["4.4", "8.5"]
+
+  - id: brsr_p3_ei3_incidents
+    framework: BRSR
+    section: Section C - Principle 3 - Safety
+    code: P3-EI-3-incidents
+    label: Number of safety-related incidents (LTIFR)
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 3"
+      GRI: "403-9"
+      SDG: ["8.8"]
+
+  - id: brsr_p3_ei3_fatalities
+    framework: BRSR
+    section: Section C - Principle 3 - Safety
+    code: P3-EI-3-fatalities
+    label: Number of fatalities
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P3 Essential Indicator 3"
+      GRI: "403-9"
+      SDG: ["8.8"]
+
+  # ═══════════════════════════════════════════
+  # SECTION C — Principle 5: Human Rights
+  # ═══════════════════════════════════════════
+
+  - id: brsr_p5_ei1_hr_training_coverage
+    framework: BRSR
+    section: Section C - Principle 5 - Human Rights
+    code: P5-EI-1
+    label: "% of employees/workers trained on human rights issues"
+    unit: "%"
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      max: 100
+    refs:
+      BRSR: "P5 Essential Indicator 1"
+      GRI: "412-2"
+      SDG: ["16.3"]
+
+  - id: brsr_p5_ei2_child_labour
+    framework: BRSR
+    section: Section C - Principle 5 - Human Rights
+    code: P5-EI-2a
+    label: Number of complaints regarding child labour (filed)
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P5 Essential Indicator 2"
+      GRI: "408-1"
+      SDG: ["8.7"]
+
+  - id: brsr_p5_ei2_forced_labour
+    framework: BRSR
+    section: Section C - Principle 5 - Human Rights
+    code: P5-EI-2b
+    label: Number of complaints regarding forced/involuntary labour
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P5 Essential Indicator 2"
+      GRI: "409-1"
+      SDG: ["8.7"]
+
+  - id: brsr_p5_ei2_sexual_harassment
+    framework: BRSR
+    section: Section C - Principle 5 - Human Rights
+    code: P5-EI-2c
+    label: Number of sexual harassment complaints filed (POSH Act)
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P5 Essential Indicator 2"
+      GRI: "406-1"
+      SDG: ["5.2", "16.3"]
+
+  # ═══════════════════════════════════════════
+  # SECTION C — Principle 2: Sustainable Products
+  # ═══════════════════════════════════════════
+
+  - id: brsr_p2_ei1_epr_registered
+    framework: BRSR
+    section: Section C - Principle 2 - Sustainable Products
+    code: P2-EI-1
+    label: Is the entity registered under Extended Producer Responsibility (EPR)?
+    field_type: boolean
+    mandatory_for:
+      classes: [top_1000, listed]
+    refs:
+      BRSR: "P2 Essential Indicator 1"
+      Law: "Plastic Waste Management Rules 2022"
+      SDG: ["12.4"]
+
+  - id: brsr_p2_ei1_epr_collected
+    framework: BRSR
+    section: Section C - Principle 2 - Sustainable Products
+    code: P2-EI-1b
+    label: Plastic waste collected/recycled under EPR (MT)
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P2 Essential Indicator 1"
+      SDG: ["12.4", "12.5"]
+
+  # ═══════════════════════════════════════════
+  # SECTION C — Principle 9: Customer Value
+  # ═══════════════════════════════════════════
+
+  - id: brsr_p9_ei1_consumer_complaints
+    framework: BRSR
+    section: Section C - Principle 9 - Consumer
+    code: P9-EI-1
+    label: Number of consumer complaints received
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P9 Essential Indicator 1"
+      GRI: "418-1"
+      SDG: ["16.6"]
+
+  - id: brsr_p9_ei1_complaints_resolved
+    framework: BRSR
+    section: Section C - Principle 9 - Consumer
+    code: P9-EI-1b
+    label: Number of consumer complaints resolved
+    field_type: number
+    mandatory_for:
+      classes: [top_1000, listed]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "P9 Essential Indicator 1"
+
+  # ═══════════════════════════════════════════
+  # BRSR CORE — Key Performance Indicators
+  # Subset subject to assurance from FY2023-24
+  # ═══════════════════════════════════════════
+
+  - id: brsr_core_ghg_scope1
+    framework: BRSR
+    section: BRSR Core KPIs
+    code: CORE-GHG-1
+    label: "BRSR Core: Total Scope 1 GHG emissions (assured)"
+    unit: tCO2e
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "BRSR Core KPI 1"
+      GRI: "305-1"
+      SDG: ["13.2"]
+    version: "BRSR Core 2023"
+
+  - id: brsr_core_ghg_scope2
+    framework: BRSR
+    section: BRSR Core KPIs
+    code: CORE-GHG-2
+    label: "BRSR Core: Total Scope 2 GHG emissions (assured)"
+    unit: tCO2e
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "BRSR Core KPI 2"
+      GRI: "305-2"
+      SDG: ["13.2"]
+    version: "BRSR Core 2023"
+
+  - id: brsr_core_ghg_intensity
+    framework: BRSR
+    section: BRSR Core KPIs
+    code: CORE-GHG-3
+    label: "BRSR Core: GHG intensity per rupee of turnover (assured)"
+    unit: tCO2e/INR_crore
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "BRSR Core KPI 3"
+      GRI: "305-4"
+    version: "BRSR Core 2023"
+
+  - id: brsr_core_water_withdrawal
+    framework: BRSR
+    section: BRSR Core KPIs
+    code: CORE-W-1
+    label: "BRSR Core: Total water withdrawal (assured)"
+    unit: KL
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "BRSR Core KPI 4"
+      GRI: "303-3"
+      SDG: ["6.4"]
+    version: "BRSR Core 2023"
+
+  - id: brsr_core_waste_generated
+    framework: BRSR
+    section: BRSR Core KPIs
+    code: CORE-WA-1
+    label: "BRSR Core: Total waste generated (assured)"
+    unit: MT
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+      evidence_required: true
+    refs:
+      BRSR: "BRSR Core KPI 5"
+      GRI: "306-3"
+      SDG: ["12.4"]
+    version: "BRSR Core 2023"
+
+  - id: brsr_core_fatalities
+    framework: BRSR
+    section: BRSR Core KPIs
+    code: CORE-S-1
+    label: "BRSR Core: Total fatalities (assured)"
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "BRSR Core KPI 6"
+      GRI: "403-9"
+      SDG: ["8.8"]
+    version: "BRSR Core 2023"
+
+  - id: brsr_core_employees_total
+    framework: BRSR
+    section: BRSR Core KPIs
+    code: CORE-E-1
+    label: "BRSR Core: Total employees and workers (assured)"
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      non_negative: true
+    refs:
+      BRSR: "BRSR Core KPI 7"
+      GRI: "2-7"
+      SDG: ["8.5"]
+    version: "BRSR Core 2023"
+
+  - id: brsr_core_female_employees_pct
+    framework: BRSR
+    section: BRSR Core KPIs
+    code: CORE-E-2
+    label: "BRSR Core: % of female employees"
+    unit: "%"
+    field_type: number
+    mandatory_for:
+      classes: [top_1000]
+    validations:
+      min: 0
+      max: 100
+    refs:
+      BRSR: "BRSR Core KPI 8"
+      GRI: "2-7"
+      SDG: ["5.5", "8.5"]
+    version: "BRSR Core 2023"

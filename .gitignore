@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+.env
+*.env
+pip-log.txt
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Node / Next.js
+esg-frontend/node_modules/
+esg-frontend/.next/
+esg-frontend/.env.local
+esg-frontend/tsconfig.tsbuildinfo
+
+# Models / large binary files
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+training/checkpoints/
+training/data/*.jsonl
+
+# Database / secrets
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.*
+!.env.example
+
+# Docker volumes / local data
+kb/sources/raw/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# LLM server temp
+llm_server_*.py

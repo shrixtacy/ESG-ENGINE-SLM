@@ -1,0 +1,312 @@
+# ESGPilot — Knowledge Base Sources Manifest
+# ============================================================
+# Registry of all authoritative documents in the KB.
+# Fields: id, title, issuer, doc_type, version, effective_from,
+#         effective_to (if superseded), url, framework,
+#         licence, retrieval_status
+#
+# doc_type values: law | circular | standard | guidance | example
+# licence values: open | restricted | copyright | unclear
+#   - open: freely reproducible
+#   - restricted: link + summarise only (do not reproduce full text)
+#   - copyright: owned by standards body (GRI, ISSB, etc.)
+#   - unclear: needs legal review
+#
+# IMPORTANT: Never reproduce verbatim text from 'copyright' or
+# 'restricted' documents. Link and paraphrase only.
+# ============================================================
+
+metadata:
+  version: "2024.1"
+  last_reviewed: "2024-03-01"
+  maintainer: "ESGPilot KB Team"
+  total_documents: 22
+
+sources:
+
+  # ──────────────────────────────────────────────────────
+  # SEBI — Business Responsibility and Sustainability
+  # ──────────────────────────────────────────────────────
+
+  - id: sebi_brsr_2021
+    title: "SEBI BRSR Circular — Business Responsibility and Sustainability Reporting"
+    issuer: "SEBI"
+    doc_type: circular
+    version: "SEBI/HO/CFD/CMD-2/CIR/P/2021/562"
+    effective_from: "2022-04-01"
+    url: "https://www.sebi.gov.in/legal/circulars/may-2021/business-responsibility-and-sustainability-reporting-by-listed-entities_50096.html"
+    framework: ["BRSR"]
+    licence: open
+    retrieval_status: indexed
+    note: "Mandates BRSR for top 1000 listed entities from FY2022-23"
+
+  - id: sebi_brsr_core_2023
+    title: "SEBI BRSR Core — Revised KPI Format and Assurance Requirements"
+    issuer: "SEBI"
+    doc_type: circular
+    version: "SEBI/HO/CFD/PoD-2/CIR/P/2023/120"
+    effective_from: "2023-04-01"
+    url: "https://www.sebi.gov.in/legal/circulars/jul-2023/revised-format-for-business-responsibility-and-sustainability-report-brsr_73953.html"
+    framework: ["BRSR"]
+    licence: open
+    retrieval_status: indexed
+    supersedes: sebi_brsr_2021
+    note: "BRSR Core with ~50 KPIs; reasonable assurance from FY2023-24 for top 1000"
+
+  - id: sebi_brsr_annexure_2023
+    title: "BRSR Disclosure Format — Annexure I (Full Form)"
+    issuer: "SEBI"
+    doc_type: standard
+    version: "2023-07-12"
+    effective_from: "2023-04-01"
+    url: "https://www.sebi.gov.in/sebi_data/attachdocs/jul-2023/16887344831.pdf"
+    framework: ["BRSR"]
+    licence: open
+    retrieval_status: indexed
+
+  - id: sebi_esg_rating_2023
+    title: "SEBI ESG Rating Providers for Securities Markets"
+    issuer: "SEBI"
+    doc_type: circular
+    version: "2023-07-12"
+    effective_from: "2023-07-12"
+    url: "https://www.sebi.gov.in/legal/circulars/jul-2023/environmental-social-and-governance-esg-rating-providers-for-securities-markets_74082.html"
+    framework: ["BRSR"]
+    licence: open
+    retrieval_status: indexed
+
+  - id: sebi_lodr_2023
+    title: "SEBI LODR (Listing Obligations and Disclosure Requirements) Amendment"
+    issuer: "SEBI"
+    doc_type: law
+    version: "2023"
+    effective_from: "2023-01-01"
+    url: "https://www.sebi.gov.in/legal/regulations/jan-2015/sebi-listing-obligations-and-disclosure-requirements-regulations-2015_26643.html"
+    framework: ["BRSR"]
+    licence: open
+    retrieval_status: pending
+
+  # ──────────────────────────────────────────────────────
+  # MCA — Ministry of Corporate Affairs
+  # ──────────────────────────────────────────────────────
+
+  - id: mca_ngrbc_2019
+    title: "National Guidelines on Responsible Business Conduct (NGRBC) 2019"
+    issuer: "MCA"
+    doc_type: standard
+    version: "2019"
+    effective_from: "2019-03-15"
+    url: "https://www.mca.gov.in/Ministry/pdf/NationalGuidelinesBRS_2019.pdf"
+    framework: ["NGRBC", "BRSR"]
+    licence: open
+    retrieval_status: indexed
+    note: "9 NGRBC principles; BRSR maps to these principles"
+
+  - id: mca_companies_act_2013
+    title: "Companies Act 2013 (Consolidated with amendments)"
+    issuer: "MCA"
+    doc_type: law
+    version: "2013-consolidated-2021"
+    effective_from: "2014-04-01"
+    url: "https://www.mca.gov.in/Ministry/pdf/CompaniesAct2013.pdf"
+    framework: ["CSR"]
+    licence: open
+    retrieval_status: indexed
+    note: "Section 135: CSR obligations"
+
+  - id: mca_csr_rules_2014
+    title: "Companies (CSR Policy) Rules 2014 — Amended 2021"
+    issuer: "MCA"
+    doc_type: law
+    version: "2014-amended-2021"
+    effective_from: "2014-04-01"
+    url: "https://www.mca.gov.in/Ministry/pdf/CSR_rules_2014.pdf"
+    framework: ["CSR"]
+    licence: open
+    retrieval_status: indexed
+
+  # ──────────────────────────────────────────────────────
+  # Environment Laws
+  # ──────────────────────────────────────────────────────
+
+  - id: moefcc_environment_act_1986
+    title: "Environment (Protection) Act 1986"
+    issuer: "MoEFCC"
+    doc_type: law
+    version: "1986"
+    effective_from: "1986-11-19"
+    url: "https://www.indiacode.nic.in/bitstream/123456789/2191/1/A1986-29.pdf"
+    framework: ["BRSR"]
+    licence: open
+    retrieval_status: pending
+
+  - id: moefcc_plastic_waste_2022
+    title: "Plastic Waste Management (Amendment) Rules 2022 — EPR Framework"
+    issuer: "MoEFCC"
+    doc_type: law
+    version: "2022"
+    effective_from: "2022-02-16"
+    url: "https://www.mca.gov.in/Ministry/pdf/PlasticWasteManagement_2022.pdf"
+    framework: ["BRSR"]
+    licence: open
+    retrieval_status: indexed
+    note: "EPR registration and compliance required for BRSR Principle 2"
+
+  # ──────────────────────────────────────────────────────
+  # UN SDGs
+  # ──────────────────────────────────────────────────────
+
+  - id: un_2030_agenda
+    title: "Transforming our world: the 2030 Agenda for Sustainable Development"
+    issuer: "United Nations"
+    doc_type: standard
+    version: "2015"
+    effective_from: "2016-01-01"
+    url: "https://sdgs.un.org/2030agenda"
+    framework: ["SDG"]
+    licence: open
+    retrieval_status: indexed
+    note: "17 SDGs, 169 targets, ~232 indicators"
+
+  - id: un_sdg_indicator_framework_2023
+    title: "Global Indicator Framework for SDGs (2023 Refinement)"
+    issuer: "UN Statistics Division"
+    doc_type: standard
+    version: "2023"
+    effective_from: "2023-01-01"
+    url: "https://unstats.un.org/sdgs/indicators/indicators-list/"
+    framework: ["SDG"]
+    licence: open
+    retrieval_status: indexed
+
+  - id: mospi_nif_3
+    title: "India National Indicator Framework (NIF) 3.0 — MoSPI"
+    issuer: "MoSPI"
+    doc_type: standard
+    version: "NIF-3.0"
+    effective_from: "2023-01-01"
+    url: "https://mospi.gov.in/national-indicator-framework"
+    framework: ["SDG"]
+    licence: open
+    retrieval_status: pending
+
+  # ──────────────────────────────────────────────────────
+  # GHG Protocol
+  # ──────────────────────────────────────────────────────
+
+  - id: ghgp_corporate_standard_2015
+    title: "GHG Protocol Corporate Accounting and Reporting Standard (Revised)"
+    issuer: "GHG Protocol / WRI / WBCSD"
+    doc_type: standard
+    version: "2015"
+    effective_from: "2015-01-01"
+    url: "https://ghgprotocol.org/corporate-standard"
+    framework: ["GHG_PROTOCOL", "BRSR"]
+    licence: copyright
+    retrieval_status: summarised_only
+    note: "Copyright WRI/WBCSD. Do not reproduce verbatim. Link and paraphrase only."
+
+  - id: ghgp_scope3_standard_2011
+    title: "GHG Protocol Corporate Value Chain (Scope 3) Accounting and Reporting Standard"
+    issuer: "GHG Protocol / WRI / WBCSD"
+    doc_type: standard
+    version: "2011"
+    effective_from: "2011-10-01"
+    url: "https://ghgprotocol.org/scope-3-standard"
+    framework: ["GHG_PROTOCOL"]
+    licence: copyright
+    retrieval_status: summarised_only
+    note: "15 Scope 3 categories. Copyright WRI/WBCSD."
+
+  # ──────────────────────────────────────────────────────
+  # Emission Factors
+  # ──────────────────────────────────────────────────────
+
+  - id: cea_co2_baseline_v18
+    title: "CEA CO2 Baseline Database for Indian Power Sector — Version 18 (2023)"
+    issuer: "Central Electricity Authority (CEA)"
+    doc_type: standard
+    version: "v18-2023"
+    effective_from: "2023-01-01"
+    url: "https://cea.nic.in/wp-content/uploads/pdm/2023/07/CO2_Baseline_Database_Ver_18.pdf"
+    framework: ["GHG_PROTOCOL", "BRSR"]
+    licence: open
+    retrieval_status: indexed
+    note: "FY2024 grid EF: 0.71 tCO2e/MWh. Updated annually."
+
+  - id: ipcc_2006_guidelines
+    title: "IPCC 2006 Guidelines for National Greenhouse Gas Inventories — Volume 2"
+    issuer: "IPCC"
+    doc_type: standard
+    version: "2006"
+    effective_from: "2006-01-01"
+    url: "https://www.ipcc-nggip.iges.or.jp/public/2006gl/vol2.html"
+    framework: ["GHG_PROTOCOL"]
+    licence: open
+    retrieval_status: indexed
+    note: "Fuel emission factors. AR5 GWP values used for CO2e conversion."
+
+  # ──────────────────────────────────────────────────────
+  # GRI Standards
+  # ──────────────────────────────────────────────────────
+
+  - id: gri_universal_2021
+    title: "GRI 1: Foundation 2021 / GRI 2: General Disclosures 2021 / GRI 3: Material Topics 2021"
+    issuer: "Global Reporting Initiative"
+    doc_type: standard
+    version: "2021"
+    effective_from: "2023-01-01"
+    url: "https://www.globalreporting.org/standards/gri-standards-download-center/"
+    framework: ["GRI"]
+    licence: copyright
+    retrieval_status: summarised_only
+    note: "Copyright GRI. Free to use with attribution. Do not reproduce verbatim."
+
+  - id: gri_305_emissions_2016
+    title: "GRI 305: Emissions 2016"
+    issuer: "Global Reporting Initiative"
+    doc_type: standard
+    version: "2016"
+    effective_from: "2018-07-01"
+    url: "https://www.globalreporting.org/standards/media/1012/gri-305-emissions-2016.pdf"
+    framework: ["GRI", "BRSR"]
+    licence: copyright
+    retrieval_status: summarised_only
+
+  - id: gri_303_water_2018
+    title: "GRI 303: Water and Effluents 2018"
+    issuer: "Global Reporting Initiative"
+    doc_type: standard
+    version: "2018"
+    effective_from: "2021-01-01"
+    url: "https://www.globalreporting.org/standards/media/1909/gri-303-water-and-effluents-2018.pdf"
+    framework: ["GRI", "BRSR"]
+    licence: copyright
+    retrieval_status: summarised_only
+
+  - id: gri_306_waste_2020
+    title: "GRI 306: Waste 2020"
+    issuer: "Global Reporting Initiative"
+    doc_type: standard
+    version: "2020"
+    effective_from: "2022-01-01"
+    url: "https://www.globalreporting.org/standards/media/2756/gri-306-waste-2020.pdf"
+    framework: ["GRI", "BRSR"]
+    licence: copyright
+    retrieval_status: summarised_only
+
+  # ──────────────────────────────────────────────────────
+  # WRI / External Tools
+  # ──────────────────────────────────────────────────────
+
+  - id: wri_aqueduct_3
+    title: "WRI Aqueduct Water Risk Atlas 3.0"
+    issuer: "World Resources Institute"
+    doc_type: guidance
+    version: "3.0"
+    effective_from: "2023-01-01"
+    url: "https://www.wri.org/aqueduct"
+    framework: ["BRSR", "GRI"]
+    licence: open
+    retrieval_status: link_only
+    note: "Interactive tool — link users to aqueduct.wri.org for water stress identification"

@@ -1,0 +1,34 @@
+{
+  "name": "@esgpilot/sdk",
+  "version": "0.1.0",
+  "description": "ESGPilot embeddable widget SDK — drop-in ESG reporting copilot",
+  "main": "dist/sdk.cjs.js",
+  "module": "dist/sdk.esm.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/sdk.esm.js",
+      "require": "./dist/sdk.cjs.js"
+    }
+  },
+  "files": ["dist", "src"],
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "keywords": ["esg", "brsr", "reporting", "widget", "sustainability"],
+  "license": "Proprietary",
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.9.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0"
+  },
+  "dependencies": {
+    "lit": "^3.1.3"
+  }
+}
